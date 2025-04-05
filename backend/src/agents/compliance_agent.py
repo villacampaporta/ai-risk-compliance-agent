@@ -1,20 +1,19 @@
 from langchain.chat_models import ChatVertexAI
 from src.utils.logger import log_event
 
-# System prompt específico para el agente de cumplimiento
+# System prompt for the compliance agent
 SYSTEM_PROMPT = (
-    "Eres un experto en cumplimiento regulatorio. Tu objetivo es analizar consultas relacionadas con "
-    "regulaciones financieras y devolver respuestas precisas y contextuales."
+    "You are an expert in regulatory compliance. Your goal is to analyze queries related to financial regulations and provide precise, contextual responses."
 )
 
-# Inicialización del modelo LLM para el agente de cumplimiento
+# Initialize the LLM for compliance queries
 llm = ChatVertexAI(model="chat-bison", system_prompt=SYSTEM_PROMPT)
 
 def compliance_agent(query: str) -> str:
     try:
         response = llm.predict(query)
-        log_event("Respuesta compliance_agent", {"response": response})
+        log_event("Compliance agent response", {"response": response})
         return response
     except Exception as e:
-        log_event("Error en compliance_agent", {"error": str(e)})
-        return "Error al analizar la consulta de cumplimiento."
+        log_event("Error in compliance_agent", {"error": str(e)})
+        return "Error analyzing the compliance query."

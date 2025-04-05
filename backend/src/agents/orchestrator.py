@@ -5,25 +5,25 @@ from src.agents.compliance_agent import compliance_agent
 from src.agents.fraud_agent import fraud_agent
 from src.utils.logger import log_event
 
-# System prompt para el agente orquestador
+# System prompt for the orchestrator agent
 ORCHESTRATOR_PROMPT = (
-    "Eres un orquestador inteligente de agentes en una plataforma de gestión de riesgos y cumplimiento. "
-    "Analiza la consulta proporcionada y decide si debe delegarse a 'compliance', 'fraud' o si ninguno de ellos "
-    "puede resolver la consulta. Devuelve un JSON con el campo 'agent', por ejemplo: {\"agent\": \"compliance\"}. "
-    "Si no es aplicable, responde {\"agent\": \"none\"}."
+    "You are an intelligent orchestrator for agents in a risk management and compliance platform. "
+    "Analyze the provided query and decide whether it should be delegated to 'compliance', 'fraud', "
+    "or if none of them can address it. Return a JSON with the field 'agent', for example: "
+    '{"agent": "compliance"}. If not applicable, respond with {"agent": "none"}.'
 )
 
-# Inicialización del modelo LLM para orquestación
+# Initialize the LLM for orchestration
 orchestrator_llm = ChatVertexAI(model="chat-bison", system_prompt=ORCHESTRATOR_PROMPT)
 
 def intelligent_orchestrator(query: str) -> str:
     try:
         messages = [
             SystemMessage(content=ORCHESTRATOR_PROMPT),
-            HumanMessage(content=f"Consulta: {query}")
+            HumanMessage(content=f"Query: {query}")
         ]
         raw_response = orchestrator_llm.predict_messages(messages)
-        log_event("Respuesta orquestador cruda", {"raw_response": raw_response})
+        log_event("Orchestrator raw response", {"raw_response": raw_response})
         
         try:
             decision = json.loads(raw_response)
@@ -33,7 +33,7 @@ def intelligent_orchestrator(query: str) -> str:
         if decision.get("agent") == "compliance":
             return compliance_agent(query)
         elif decision.get("agent") == "fraud":
-            # En un caso real, se extraerían detalles relevantes de la consulta.
+            # In a real implementation, extract transaction details from the query.
             dummy_transaction = {
                 "amount": 900,
                 "ip_distance": 120,
@@ -43,7 +43,7 @@ def intelligent_orchestrator(query: str) -> str:
             }
             return json.dumps(fraud_agent(dummy_transaction))
         else:
-            return "Lo siento, no puedo resolver esa consulta en este momento."
+            return "I'm sorry, I cannot resolve that query at this time."
     except Exception as e:
-        log_event("Error en el orquestador", {"error": str(e)})
-        return "Error al procesar la consulta."
+        log_event("Error in orchestrator", {"error": str(e)})
+        return "Error processing the query."
