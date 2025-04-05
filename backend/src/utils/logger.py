@@ -1,7 +1,6 @@
 import logging
 import sys
 
-# Basic configuration for logging to stdout with time and level information
 logging.basicConfig(
     stream=sys.stdout,
     level=logging.INFO,

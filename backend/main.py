@@ -4,14 +4,15 @@ from flask import Flask, jsonify
 from src.endpoints.transaction_endpoint import transaction_bp
 from src.endpoints.query_endpoint import query_bp
 from google.cloud import logging as cloud_logging
+from src.config import Config
 
 def create_app():
     app = Flask(__name__)
     
-    # SECURITY: Set secret key from environment variable
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'change-this-in-production')
+    # Load configuration from the Config class
+    app.config.from_object(Config)
     
-    # Initialize Google Cloud Logging for centralized logging in production
+    # Initialize Google Cloud Logging for production-level logging
     try:
         client = cloud_logging.Client()
         client.setup_logging(log_level=logging.INFO)
@@ -27,16 +28,16 @@ def create_app():
     @app.route("/health", methods=["GET"])
     def health_check():
         return jsonify({"status": "ok"}), 200
-    
-    # Error handlers for common HTTP errors
+
+    # Global error handlers
     @app.errorhandler(404)
     def not_found(error):
         return jsonify({"error": "Not found"}), 404
-    
+
     @app.errorhandler(500)
     def internal_error(error):
         return jsonify({"error": "Internal server error"}), 500
-    
+
     return app
 
 if __name__ == "__main__":

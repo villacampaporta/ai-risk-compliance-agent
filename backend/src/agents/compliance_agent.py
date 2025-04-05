@@ -3,7 +3,8 @@ from src.utils.logger import log_event
 
 # System prompt for the compliance agent
 SYSTEM_PROMPT = (
-    "You are an expert in regulatory compliance. Your goal is to analyze queries related to financial regulations and provide precise, contextual responses."
+    "You are an expert in regulatory compliance. Your goal is to analyze queries related to financial regulations "
+    "and provide precise, contextual responses."
 )
 
 # Initialize the LLM for compliance queries

@@ -9,8 +9,8 @@ from src.utils.logger import log_event
 ORCHESTRATOR_PROMPT = (
     "You are an intelligent orchestrator for agents in a risk management and compliance platform. "
     "Analyze the provided query and decide whether it should be delegated to 'compliance', 'fraud', "
-    "or if none of them can address it. Return a JSON with the field 'agent', for example: "
-    '{"agent": "compliance"}. If not applicable, respond with {"agent": "none"}.'
+    "or if none of them can address it. Return a JSON with the field 'agent', e.g., {\"agent\": \"compliance\"}. "
+    "If not applicable, respond with {\"agent\": \"none\"}."
 )
 
 # Initialize the LLM for orchestration
@@ -33,13 +33,16 @@ def intelligent_orchestrator(query: str) -> str:
         if decision.get("agent") == "compliance":
             return compliance_agent(query)
         elif decision.get("agent") == "fraud":
-            # In a real implementation, extract transaction details from the query.
+            # For demonstration, using a dummy transaction; in production, extract details from the query.
             dummy_transaction = {
                 "amount": 900,
                 "ip_distance": 120,
                 "device_type_id": 2,
                 "time_of_day": 23,
-                "tx_frequency": 5
+                "tx_frequency": 5,
+                "merchant_risk": 0.7,
+                "account_age": 500,
+                "location_deviation": 10
             }
             return json.dumps(fraud_agent(dummy_transaction))
         else:

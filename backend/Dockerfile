@@ -1,25 +1,18 @@
-# For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3-slim
-
-EXPOSE 5002
-
-# Keeps Python from generating .pyc files in the container
-ENV PYTHONDONTWRITEBYTECODE=1
-
-# Turns off buffering for easier container logging
-ENV PYTHONUNBUFFERED=1
-
-# Install pip requirements
-COPY requirements.txt .
-RUN python -m pip install -r requirements.txt
+FROM python:3.10-slim
 
 WORKDIR /app
-COPY . /app
+COPY . .
 
-# Creates a non-root user with an explicit UID and adds permission to access the /app folder
-# For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
-RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
-USER appuser
+RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6 --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
 
-# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD ["gunicorn", "--bind", "0.0.0.0:5002", "ai-risk-compliance-agent.backend\main:app"]
+RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
+
+# If you have a wheel file for Google agents, copy and install it here:
+# COPY google_genai_agents-0.0.2.dev20250108-py3-none-any.whl ./
+# RUN pip install --no-cache-dir google_genai_agents-0.0.2.dev20250108-py3-none-any.whl
+
+ENV FLASK_ENV=production
+EXPOSE 8080
+
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "main:app", "-t", "500"]
