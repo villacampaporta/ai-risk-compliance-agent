@@ -1,10 +1,3 @@
-# ai-risk-compliance-agent-
-
-Below is an example README.md for your GitHub repository that covers the project overview, structure, development instructions, GCP deployment, and BigQuery integration:
-
----
-
-```markdown
 # Risk & Compliance Agent
 
 A modular, AI-powered agent system designed to streamline risk management and regulatory compliance for financial institutions. The solution integrates machine learning for real-time fraud detection with natural language processing (NLP) for compliance analysis. It is built using Flask, Python, and Google Cloud Platform (GCP) services.
