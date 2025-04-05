@@ -4,7 +4,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 import joblib
 import os
-from src.utils.logger import log_event
+from utils.logger import log_event
 
 def generate_labels(df):
     """
@@ -22,7 +22,7 @@ def generate_labels(df):
     return (score > threshold).astype(int)
 
 def train_model():
-    data_file = "src/data/transactions_sample.csv"
+    data_file = "data/transactions_sample.csv"
     if not os.path.exists(data_file):
         print(f"Data file {data_file} does not exist. Generate transaction data first.")
         return
@@ -46,7 +46,7 @@ def train_model():
     log_event("Model training", {"accuracy": accuracy})
     print(f"Model trained with accuracy: {accuracy:.2f}")
     
-    model_path = "src/model/fraud_model.pkl"
+    model_path = "model/fraud_model.pkl"
     joblib.dump(model, model_path)
     log_event("Model saved", {"model_path": model_path})
     print(f"Model saved to {model_path}")
