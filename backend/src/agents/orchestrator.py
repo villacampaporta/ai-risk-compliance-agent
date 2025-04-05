@@ -1,5 +1,5 @@
 import json
-from langchain.chat_models import ChatVertexAI
+from langchain_google_vertexai import ChatVertexAI
 from langchain.schema import SystemMessage, HumanMessage
 from src.agents.compliance_agent import compliance_agent
 from src.agents.fraud_agent import fraud_agent

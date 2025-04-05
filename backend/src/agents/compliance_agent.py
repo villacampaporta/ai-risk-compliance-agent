@@ -1,4 +1,4 @@
-from langchain.chat_models import ChatVertexAI
+from langchain_google_vertexai import ChatVertexAI
 from src.utils.logger import log_event
 
 # System prompt for the compliance agent
