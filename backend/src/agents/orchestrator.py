@@ -1,9 +1,14 @@
 import json
+import os
+import vertexai
 from langchain_google_vertexai import ChatVertexAI
 from langchain.schema import SystemMessage, HumanMessage
 from src.agents.compliance_agent import compliance_agent
 from src.agents.fraud_agent import fraud_agent
 from src.utils.logger import log_event
+
+# Initialize Vertex AI with your project info
+vertexai.init(project=os.environ.get("GOOGLE_CLOUD_PROJECT", "your-project-id"), location="us-central1")
 
 # System prompt for the orchestrator agent
 ORCHESTRATOR_PROMPT = (
@@ -13,21 +18,16 @@ ORCHESTRATOR_PROMPT = (
     "If not applicable, respond with {\"agent\": \"none\"}."
 )
 
-# Initialize the LLM for orchestration
-orchestrator_llm = ChatVertexAI(model="chat-bison", system_prompt=ORCHESTRATOR_PROMPT)
+# Initialize the LLM without passing system_prompt in the constructor.
+llm = ChatVertexAI(model_name="chat-bison")
 
 def intelligent_orchestrator(query: str, transaction: dict = None) -> str:
-    """
-    Analyze the query and delegate to the appropriate agent.
-    If the decision is 'fraud' and a transaction is provided, it uses the provided transaction;
-    otherwise, it falls back to a simulated dummy transaction.
-    """
     try:
         messages = [
             SystemMessage(content=ORCHESTRATOR_PROMPT),
             HumanMessage(content=f"Query: {query}")
         ]
-        raw_response = orchestrator_llm.predict_messages(messages)
+        raw_response = llm.predict_messages(messages)
         log_event("Orchestrator raw response", {"raw_response": raw_response})
         
         try:
@@ -38,7 +38,7 @@ def intelligent_orchestrator(query: str, transaction: dict = None) -> str:
         if decision.get("agent") == "compliance":
             return compliance_agent(query)
         elif decision.get("agent") == "fraud":
-            # Use the provided transaction if available; otherwise, fallback to a dummy
+            # Use provided transaction data if available; otherwise, fallback to a dummy transaction.
             if transaction is None:
                 transaction = {
                     "amount": 900,
