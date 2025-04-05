@@ -4,6 +4,10 @@ from langchain_google_vertexai import ChatVertexAI
 from langchain.schema import SystemMessage, HumanMessage
 from src.utils.logger import log_event
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Initialize Vertex AI with your project info
 vertexai.init(project=os.environ.get("GOOGLE_CLOUD_PROJECT", "your-project-id"), location="us-central1")
 
