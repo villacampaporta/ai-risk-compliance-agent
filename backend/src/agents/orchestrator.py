@@ -16,7 +16,12 @@ ORCHESTRATOR_PROMPT = (
 # Initialize the LLM for orchestration
 orchestrator_llm = ChatVertexAI(model="chat-bison", system_prompt=ORCHESTRATOR_PROMPT)
 
-def intelligent_orchestrator(query: str) -> str:
+def intelligent_orchestrator(query: str, transaction: dict = None) -> str:
+    """
+    Analyze the query and delegate to the appropriate agent.
+    If the decision is 'fraud' and a transaction is provided, it uses the provided transaction;
+    otherwise, it falls back to a simulated dummy transaction.
+    """
     try:
         messages = [
             SystemMessage(content=ORCHESTRATOR_PROMPT),
@@ -33,18 +38,19 @@ def intelligent_orchestrator(query: str) -> str:
         if decision.get("agent") == "compliance":
             return compliance_agent(query)
         elif decision.get("agent") == "fraud":
-            # For demonstration, using a dummy transaction; in production, extract details from the query.
-            dummy_transaction = {
-                "amount": 900,
-                "ip_distance": 120,
-                "device_type_id": 2,
-                "time_of_day": 23,
-                "tx_frequency": 5,
-                "merchant_risk": 0.7,
-                "account_age": 500,
-                "location_deviation": 10
-            }
-            return json.dumps(fraud_agent(dummy_transaction))
+            # Use the provided transaction if available; otherwise, fallback to a dummy
+            if transaction is None:
+                transaction = {
+                    "amount": 900,
+                    "ip_distance": 120,
+                    "device_type_id": 2,
+                    "time_of_day": 23,
+                    "tx_frequency": 5,
+                    "merchant_risk": 0.7,
+                    "account_age": 500,
+                    "location_deviation": 10
+                }
+            return json.dumps(fraud_agent(transaction))
         else:
             return "I'm sorry, I cannot resolve that query at this time."
     except Exception as e:
