@@ -178,8 +178,4 @@ Contributions are welcome! Please fork the repository and submit pull requests. 
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-```
 
----
-
-This README provides a clear overview of your project, instructions for local development, deployment steps to GCP, and details on integrating with BigQuery. Adjust the content as needed to match any specific changes in your implementation or additional requirements.
