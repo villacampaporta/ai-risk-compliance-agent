@@ -85,7 +85,9 @@ def intelligent_orchestrator(query: str, transaction: dict = None) -> str:
                     "account_age": 500,
                     "location_deviation": 10
                 }
-            return formatter_agent(query, fraud_agent(transaction) or {}, fraud_agent(transaction))
+            return _unwrap_result(
+                formatter_agent(query, fraud_agent(transaction) or {}, fraud_agent(transaction))
+            )
         else:
             return "I'm sorry, I cannot resolve that query at this time."
     except Exception as e:
