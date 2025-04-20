@@ -8,7 +8,7 @@ from src.agents.fraud_agent import fraud_agent
 from src.utils.logger import log_event
 
 # Initialize Vertex AI with your project info
-vertexai.init(project=os.environ.get("GOOGLE_CLOUD_PROJECT", "your-project-id"), location="us-central1")
+vertexai.init(project=os.environ.get("GOOGLE_CLOUD_PROJECT", "us-con-gcp-sbx-0000478-032025"), location="europe-west4")
 
 # System prompt for the orchestrator agent
 ORCHESTRATOR_PROMPT = (
@@ -19,7 +19,7 @@ ORCHESTRATOR_PROMPT = (
 )
 
 # Initialize the LLM without passing system_prompt in the constructor.
-llm = ChatVertexAI(model_name="chat-bison")
+llm = ChatVertexAI(model_name="gemini-2.5-pro-preview-03-25")
 
 def intelligent_orchestrator(query: str, transaction: dict = None) -> str:
     try:
