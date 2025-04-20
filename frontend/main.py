@@ -33,7 +33,7 @@ st.markdown(
 )
 
 # --- Header ---
-st.markdown("<h1>AI Risk & Compliance Agent</h1>", unsafe_allow_html=True)
+st.markdown("<h1>Financial Risk & Compliance Assistant</h1>", unsafe_allow_html=True)
 st.markdown("<p class='subtitle'>Real-time fraud detection & regulatory compliance assistant.</p>", unsafe_allow_html=True)
 
 # --- Backend Credentials ---
@@ -76,20 +76,20 @@ def call_api(endpoint: str, payload: dict):
 with st.sidebar:
     selected = option_menu(
         menu_title="Navigation",
-        options=["Compliance Query", "About"],
+        options=["Assistant", "About"],
         icons=["question-circle", "info-circle"],
         menu_icon="shield-check",
         default_index=0,
     )
 
 # --- Compliance Query Page ---
-if selected == "Compliance Query":
-    st.header("📋 Compliance Query")
+if selected == "Assistant":
+    st.header("📋 Ask our assistant")
     st.info("Use the Q&A tab to ask compliance questions. Provide transaction context in the Context tab.")
 
     # Initialize chat with greeting
     if "chat_history" not in st.session_state:
-        st.session_state.chat_history = [(False, "Hi! How can I assist you with compliance today?")]
+        st.session_state.chat_history = [(False, "Hi! What can I assist you with?")]
 
     tabs = st.tabs(["Q&A", "Context"])
 
@@ -101,7 +101,7 @@ if selected == "Compliance Query":
                 key="input_q",
                 placeholder="e.g. What are the latest GDPR requirements?"
             )
-            send     = st.form_submit_button("Send Query")
+            send     = st.form_submit_button("Send")
         if send and user_msg:
             st.session_state.chat_history.append((True, user_msg))
             payload = {"query": user_msg}
@@ -184,12 +184,12 @@ if selected == "Compliance Query":
 
 # --- About Page ---
 elif selected == "About":
-    st.header("ℹ️ About AI Risk & Compliance Agent")
+    st.header("ℹ️ About Financial Risk & Compliance assistant")
     readme_path = Path(__file__).resolve().parent / 'USER_GUIDE.md'
     if not readme_path.exists():
         md_path = Path.cwd() / "USER_GUIDE.md"
     if readme_path.exists():
         st.markdown(readme_path.read_text(encoding="utf-8"), unsafe_allow_html=True)
     else:
-        st.write("**AI Risk & Compliance Agent:** Streamline fraud detection & compliance.")
+        st.write("**Financial Risk & Compliance Agent:** Streamline fraud detection & compliance.")
     st.write("© 2025 ICAI Consultants. All rights reserved.")

@@ -1,14 +1,13 @@
 runtime: custom
-service: risk-compliance-agent
+service: default
 env: flex
 automatic_scaling:
   min_num_instances: 1
   max_num_instances: 5
 network:
   instance_ip_mode: internal
-  instance_tag: default-vpc-1
-  name: default-vpc-1
-  subnetwork_name: default-vpc-1
+  name: icai-consultants-hack-20042025
+  subnetwork_name: icai-consultants-hack-20042025-subnet1
 handlers:
 - url: /.*
   script: auto

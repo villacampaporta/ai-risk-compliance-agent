@@ -10,12 +10,14 @@ transaction_bp = Blueprint("transaction", __name__)
 @require_api_key
 def predict_transaction():
     try:
-        data = request.get_json()
-        if not data:
+        payload = request.get_json()
+        txn = payload.get("transaction")
+
+        if not txn:
             return jsonify({"error": "No input data provided"}), 400
 
-        log_event("Transaction received", data)
-        result = fraud_agent(data)
+        log_event("Transaction received", txn)
+        result = fraud_agent(txn)
         return jsonify(result), 200
     except Exception as e:
         log_event("Error in predict_transaction", {"error": str(e), "trace": traceback.format_exc()})

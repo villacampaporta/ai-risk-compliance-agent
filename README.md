@@ -8,10 +8,9 @@ A modular, AI-powered agent system designed to streamline risk management and re
 
 The **Risk & Compliance Agent** is a multi-agent system that:
 
-- ✅ **Monitors transactions in real time** to detect anomalies and potential fraud.
+- ✅ **Monitors transactions** to detect anomalies and potential fraud, by providing an integration API (api/fraud_detection) to which new transactions can be sent in real time from other aplications to obtain a numerical prediction of the fraud probability.
 - ⚖️ **Interprets regulatory updates** and provides compliance recommendations using LLMs (LangChain + Vertex AI).
 - 🧠 **Routes queries intelligently** using a custom orchestrator that delegates requests based on intent.
-- 🔍 **Integrates with BigQuery** to analyze large-scale financial datasets.
 - ☁️ **Deploys on GCP** using App Engine or Cloud Run for scalability and resilience.
 
 ---
@@ -65,7 +64,7 @@ frontend/
 
 ## ✅ Prerequisites
 
-- Python 3.10+
+- Python 3.12+
 - [Docker](https://www.docker.com/)
 - [Google Cloud SDK](https://cloud.google.com/sdk)
 - GCP project with App Engine and billing enabled
@@ -165,7 +164,6 @@ Response:
 - [LangChain Docs](https://python.langchain.com/)
 - [Google Cloud Logging](https://cloud.google.com/logging)
 - [Vertex AI Gemini](https://cloud.google.com/vertex-ai/docs/generative-ai/overview)
-- [BigQuery Python Client](https://googleapis.dev/python/bigquery/latest/index.html)
 
 ---
 

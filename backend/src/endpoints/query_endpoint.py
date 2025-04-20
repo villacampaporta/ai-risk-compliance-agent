@@ -12,7 +12,6 @@ def query():
     try:
         payload = request.get_json()
         user_query = payload.get("query")
-        user_query = payload.get("query")
         txn = payload.get("transaction")  # <-- grab the transaction block
         if not user_query:
             return jsonify({"error": "The 'query' parameter is required"}), 400
