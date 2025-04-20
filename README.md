@@ -194,11 +194,3 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 🌍 [LinkedIn](https://www.linkedin.com/in/javiervillacampaporta/)
 
 ---
-```
-
-Let me know if you'd like:
-- A `docs/` folder for internal architecture or usage guides
-- A Mermaid diagram for architecture flow
-- A `Makefile` or `devcontainer.json` for reproducible environments
-
-Happy to extend this further.
