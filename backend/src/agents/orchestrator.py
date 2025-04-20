@@ -1,8 +1,9 @@
 import json
 import os
+import re
 import vertexai
 from langchain_google_vertexai import ChatVertexAI
-from langchain.schema import SystemMessage, HumanMessage
+from langchain.schema import SystemMessage, HumanMessage, AIMessage
 from src.agents.compliance_agent import compliance_agent
 from src.agents.fraud_agent import fraud_agent
 from src.utils.logger import log_event
@@ -21,6 +22,33 @@ ORCHESTRATOR_PROMPT = (
 # Initialize the LLM without passing system_prompt in the constructor.
 llm = ChatVertexAI(model_name="gemini-2.5-pro-preview-03-25")
 
+def _extract_json(content: str) -> str:
+    """
+    Strip markdown fences and grab the first {...} block.
+    """
+    # 1) Look for a ```json ... ``` block
+    m = re.search(r"```json\s*(\{.*?\})\s*```", content, re.DOTALL)
+    if m:
+        return m.group(1)
+    # 2) Fallback: first {...}
+    m = re.search(r"(\{.*?\})", content, re.DOTALL)
+    if m:
+        return m.group(1)
+    raise ValueError("No JSON object found in response")
+
+def _unwrap_result(result):
+    """
+    Given whatever the agent returns, always produce a JSON-serializable type:
+    - If it's an AIMessage, return its content string.
+    - If it's a dict or list, return it directly.
+    - Otherwise, str() it.
+    """
+    if isinstance(result, AIMessage):
+        return result.content
+    if isinstance(result, (dict, list, str, int, float, bool, type(None))):
+        return result
+    return str(result)
+
 def intelligent_orchestrator(query: str, transaction: dict = None) -> str:
     try:
         messages = [
@@ -29,14 +57,20 @@ def intelligent_orchestrator(query: str, transaction: dict = None) -> str:
         ]
         raw_response = llm.predict_messages(messages)
         log_event("Orchestrator raw response", {"raw_response": raw_response})
-        
+
+        # Clean & parse JSON
         try:
-            decision = json.loads(raw_response)
-        except Exception:
+            #json_str = _extract_json(raw_response)
+            content = getattr(raw_response, "content", str(raw_response))
+            json_str = _extract_json(content)
+            log_event("The AI message content is as such:", {"json_str": json_str})
+            decision = json.loads(json_str)
+        except Exception as e:
+            log_event("Failed to parse orchestrator JSON", {"error": str(e), "raw": raw_response})
             decision = {"agent": "none"}
         
         if decision.get("agent") == "compliance":
-            return compliance_agent(query)
+            return _unwrap_result(compliance_agent(query))
         elif decision.get("agent") == "fraud":
             # Use provided transaction data if available; otherwise, fallback to a dummy transaction.
             if transaction is None:

@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Initialize Vertex AI with your project info
-vertexai.init(project=os.environ.get("GOOGLE_CLOUD_PROJECT", "your-project-id"), location="us-central1")
+vertexai.init(project=os.environ.get("GOOGLE_CLOUD_PROJECT", "us-con-gcp-sbx-0000478-032025"), location="europe-west4")
 
 # System prompt for the compliance agent
 SYSTEM_PROMPT = (
@@ -18,7 +18,7 @@ SYSTEM_PROMPT = (
 )
 
 # Initialize the LLM without the system_prompt parameter
-llm = ChatVertexAI(model_name="chat-bison")
+llm = ChatVertexAI(model_name="gemini-2.5-pro-preview-03-25")
 
 def compliance_agent(query: str) -> str:
     messages = [
