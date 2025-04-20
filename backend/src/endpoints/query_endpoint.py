@@ -12,11 +12,13 @@ def query():
     try:
         payload = request.get_json()
         user_query = payload.get("query")
+        user_query = payload.get("query")
+        txn = payload.get("transaction")  # <-- grab the transaction block
         if not user_query:
             return jsonify({"error": "The 'query' parameter is required"}), 400
         
         log_event("Query received", {"query": user_query})
-        response = intelligent_orchestrator(user_query)
+        response = intelligent_orchestrator(user_query, transaction=txn)
         return jsonify({"response": response}), 200
     except Exception as e:
         log_event("Error in query endpoint", {"error": str(e), "trace": traceback.format_exc()})

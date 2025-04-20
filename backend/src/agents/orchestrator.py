@@ -6,6 +6,7 @@ from langchain_google_vertexai import ChatVertexAI
 from langchain.schema import SystemMessage, HumanMessage, AIMessage
 from src.agents.compliance_agent import compliance_agent
 from src.agents.fraud_agent import fraud_agent
+from src.agents.formatter_agent import formatter_agent
 from src.utils.logger import log_event
 
 # Initialize Vertex AI with your project info
@@ -84,7 +85,7 @@ def intelligent_orchestrator(query: str, transaction: dict = None) -> str:
                     "account_age": 500,
                     "location_deviation": 10
                 }
-            return json.dumps(fraud_agent(transaction))
+            return formatter_agent(query, fraud_agent(transaction) or {}, fraud_agent(transaction))
         else:
             return "I'm sorry, I cannot resolve that query at this time."
     except Exception as e:
