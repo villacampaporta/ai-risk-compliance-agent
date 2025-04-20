@@ -1,6 +1,7 @@
 # frontend/app.py
 import streamlit as st
 from streamlit_option_menu import option_menu
+from streamlit_chat import message
 import requests
 import pandas as pd
 import math
@@ -110,9 +111,20 @@ if selected == "Compliance Query":
             answer = resp.get("response") if resp else f"Error: {err}"
             st.session_state.chat_history.append((False, answer))
 
+        # for idx, (is_user, msg) in enumerate(st.session_state.chat_history):
+        #     cls = "user-bubble" if is_user else "ai-bubble"
+        #     st.markdown(f"<div class='{cls}'>{msg}</div>", unsafe_allow_html=True)
+
         for idx, (is_user, msg) in enumerate(st.session_state.chat_history):
-            cls = "user-bubble" if is_user else "ai-bubble"
-            st.markdown(f"<div class='{cls}'>{msg}</div>", unsafe_allow_html=True)
+            avatar = "shapes" if is_user else "shapes"
+            seed = "Felix" if is_user else "assistant"
+            message(
+                msg,
+                is_user=is_user,
+                key=f"msg_{idx}",
+                avatar_style=avatar,
+                seed=seed
+            )
 
     # Context Tab
     with tabs[1]:

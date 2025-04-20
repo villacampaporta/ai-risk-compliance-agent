@@ -24,7 +24,10 @@ _FORMATTER_SYSTEM = (
     "Draft a clear, professional paragraph that:\n"
     "- Summarizes the risk or recommendation\n"
     "- Explains key factors\n"
-    "- Advises next steps"
+    "- Advises next steps\n\n"
+    "Reply to the user query, as if you were directly speaking to the final user.\n"
+    "Your reply from start to end is intended for the user only."
+    ""
 )
 
 def formatter_agent(query: str, transaction: dict, prediction: dict) -> str:
